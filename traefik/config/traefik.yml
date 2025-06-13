@@ -1,0 +1,6 @@
+tls:
+  certificates:
+    - certFile: /run/secrets/wildcard_fullchain
+      keyFile: /run/secrets/wildcard_privkey
+      stores:
+        - default
