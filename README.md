@@ -36,6 +36,20 @@ mkdir -p ~/data && \
 
 6. Add `certs/wildcard/ca.pem` to your trust store.
 
-7. Open [https://vault10.mac.example.com](https://vault10.mac.example.com) in your browser.
+```
+open certs/wildcard/ca.pem
+```
+
+This will open Keychain Access, where you can mark the CA Cert as trusted.
+
+7. Connect to the DR Primary by opening [https://vault10.mac.example.com](https://vault10.mac.example.com) in your browser.
+
+You may obtain the root token by running:
+
+```
+cat vault10-init.json | jq -r .root_token
+```
+
+8. Connect to the DR Secondary by opening [https://vault20.mac.example.com](https://vault20.mac.example.com) in your browser.
 
 ---
