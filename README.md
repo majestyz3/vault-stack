@@ -4,13 +4,24 @@ This repo stands up two HashiCorp Vault Enterprise clusters and configures DR Re
 
 ## Usage
 
+1. Install and enable Docker Desktop.
+
+2. Clone the repo (or a fork of it).
+
 ```
 mkdir -p ~/data && \
   cd ~/data && \
   git clone git@github.com:ykhemani-demo/vault-stack.git && \
-  cd vault-stack && \
-  . ./functions.sh && \
+  cd vault-stack
+```
+
+3. Obtain and place a Vault Enterprise license in `license/vault.hclic`.
+
+4. Build the demo.
+
+```
+. ./functions.sh && \
   ./stack.sh
 ```
 
-
+---
