@@ -24,6 +24,12 @@ mkdir -p ~/data && \
   cd ~/data && \
   git clone git@github.com:ykhemani-demo/vault-stack.git && \
   cd vault-stack
+
+# The stack scripts use the `TOP` environment variable to locate
+# configuration and data directories. By default `stack.sh` sets `TOP`
+# to the directory containing this repository. If you prefer a
+# different location, export `TOP` or edit `.env` before running the
+# scripts.
 ```
 
 4. Obtain and place a Vault Enterprise license in `license/vault.hclic`.
@@ -33,6 +39,10 @@ mkdir -p ~/data && \
 ```
 . ./functions.sh && \
   ./stack.sh
+
+Stack.sh verifies that certificates were created successfully. If
+`certs/wildcard` is empty after running the Terraform container, the
+script exits with an error message.
 ```
 
 6. Add `certs/wildcard/ca.pem` to your trust store.
