@@ -4,7 +4,8 @@ This repo stands up two HashiCorp Vault Enterprise clusters and configures DR Re
 
 ## Usage
 
-1. Place the following entries in your `/etc/hosts` file.
+1. Place the following entries in your `/etc/hosts` file. - this can be done by running the script prework.sh 
+. ./prework.sh
 
 ```
 127.0.0.1       traefik.mac.example.com whoami.mac.example.com
