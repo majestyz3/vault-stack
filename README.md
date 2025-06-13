@@ -2,3 +2,15 @@
 
 This repo stands up two HashiCorp Vault Enterprise clusters and configures DR Replication, setting one as a primary and the other as a secondary.
 
+## Usage
+
+```
+mkdir -p ~/data && \
+  cd ~/data && \
+  git clone git@github.com:ykhemani-demo/vault-stack.git && \
+  cd vault-stack && \
+  . ./functions.sh && \
+  ./stack.sh
+```
+
+
