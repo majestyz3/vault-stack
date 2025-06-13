@@ -98,6 +98,6 @@ sleep 10
 log INFO "Enable (secondary) DR replication vault20."
 vault21 write sys/replication/dr/secondary/enable token=$(cat vault10-dr-secondary-token.json | jq -r .wrap_info.token) ca_file=/run/secrets/wildcard_ca_cert
 
-sleep 10
-
 ###########################################################
+
+log INFO "Please add certs/wildcard/ca.pem to your trust store."
