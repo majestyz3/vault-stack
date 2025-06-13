@@ -2,7 +2,12 @@
 
 # Vault configs should exist. Not generated as part of this script.
 
+
 . ./functions.sh
+
+# Determine repository directory for Docker mounts
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+export TOP="${TOP:-$SCRIPT_DIR}"
 
 log INFO "Starting stack.sh"
 
@@ -22,6 +27,10 @@ sleep 5
 
 log INFO "Certificates:"
 ls -l certs/wildcard
+if [ ! -f certs/wildcard/privkey.pem ]; then
+  log ERROR "Certificate generation failed. See cert_factory container logs."
+  exit 1
+fi
 
 log INFO "Starting the rest of the containers."
 docker-compose up -d 

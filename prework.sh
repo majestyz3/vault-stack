@@ -32,3 +32,25 @@ for entry in "${entries[@]}"; do
     log INFO "Hosts entry already present: $entry"
   fi
 done
+
+NETWORK_CIDR="172.20.0.0/24"
+if command -v docker >/dev/null 2>&1; then
+  log INFO "Checking for Docker networks that use $NETWORK_CIDR."
+  docker network ls --quiet | while read -r net; do
+    subnet=$(docker network inspect "$net" -f '{{range .IPAM.Config}}{{.Subnet}}{{end}}' 2>/dev/null)
+    if [ "$subnet" = "$NETWORK_CIDR" ]; then
+      name=$(docker network inspect "$net" -f '{{.Name}}')
+      log INFO "Found conflicting Docker network: $name"
+      read -r -p "Delete network '$name'? [y/N] " yn
+      if [[ $yn =~ ^[Yy]$ ]]; then
+        log INFO "Removing Docker network: $name"
+        docker network rm "$name"
+      else
+        log INFO "Keeping Docker network: $name"
+      fi
+    fi
+  done
+else
+  log WARNING "Docker not available; skipping network check."
+fi
+
