@@ -6,7 +6,7 @@
 
 log INFO "Starting stack.sh"
 
-for i in 1 2; do
+for i in 1 2 3 4; do
   for j in 1 2 3; do
     mkdir -p vault$i$j/audit
     mkdir -p vault$i$j/conf
@@ -155,6 +155,58 @@ VAULT_TOKEN=$(cat vault20-init.json | jq -r .root_token) vault21 operator raft l
 
 ###########################################################
 
+log INFO "Initializing Vault cluster vault30."
+vault31 operator init -key-threshold=1 -key-shares=1 -format=json | tee vault30-init.json
+
+sleep 2
+
+log INFO "Setting VAULT_SEAL_KEY and VAULT_TOKEN for vault30."
+export VAULT_SEAL_KEY=$(cat vault30-init.json | jq -r ".unseal_keys_b64[]")
+export VAULT_TOKEN=$(cat vault30-init.json | jq -r .root_token)
+
+log INFO "Unsealing vault31."
+vault31 operator unseal $VAULT_SEAL_KEY
+
+sleep 2
+log INFO "Unsealing vault32."
+vault32 operator unseal $VAULT_SEAL_KEY
+
+sleep 2
+log INFO "Unsealing vault33."
+vault33 operator unseal $VAULT_SEAL_KEY
+
+sleep 5
+log INFO "Getting raft peers for vault30."
+VAULT_TOKEN=$(cat vault30-init.json | jq -r .root_token) vault31 operator raft list-peers
+
+###########################################################
+
+log INFO "Initializing Vault cluster vault40."
+vault41 operator init -key-threshold=1 -key-shares=1 -format=json | tee vault40-init.json
+
+sleep 2
+
+log INFO "Setting VAULT_SEAL_KEY and VAULT_TOKEN for vault40."
+export VAULT_SEAL_KEY=$(cat vault40-init.json | jq -r ".unseal_keys_b64[]")
+export VAULT_TOKEN=$(cat vault40-init.json | jq -r .root_token)
+
+log INFO "Unsealing vault41."
+vault41 operator unseal $VAULT_SEAL_KEY
+
+sleep 2
+log INFO "Unsealing vault42."
+vault42 operator unseal $VAULT_SEAL_KEY
+
+sleep 2
+log INFO "Unsealing vault43."
+vault43 operator unseal $VAULT_SEAL_KEY
+
+sleep 5
+log INFO "Getting raft peers for vault40."
+VAULT_TOKEN=$(cat vault40-init.json | jq -r .root_token) vault41 operator raft list-peers
+
+###########################################################
+
 log INFO "Enable (primary) DR replication on vault10."
 vault11 write -f sys/replication/dr/primary/enable
 
@@ -164,6 +216,34 @@ vault11 write -format=json sys/replication/dr/primary/secondary-token id="dr-sec
 sleep 10
 log INFO "Enable (secondary) DR replication vault20."
 vault21 write sys/replication/dr/secondary/enable token=$(cat vault10-dr-secondary-token.json | jq -r .wrap_info.token) ca_file=/run/secrets/wildcard_ca_cert
+
+###########################################################
+
+sleep 5
+log INFO "Enable (primary) Performance replication on vault10."
+vault11 write -address=https://vault10.$DOMAIN -f sys/replication/performance/primary/enable
+
+sleep 5
+log INFO "Generate secondary Primary Replication token on Performance Primary (vault10)."
+vault11 write -format=json -address=https://vault10.$DOMAIN sys/replication/performance/primary/secondary-token id=secondary | tee vault10-performance-primary-token.json
+
+sleep 10
+log INFO "Enable (secondary) Performance Replication on vault30."
+vault31 write sys/replication/performance/secondary/enable token=$(cat vault10-performance-primary-token.json | jq -r .wrap_info.token) ca_file=/run/secrets/wildcard_ca_cert
+
+###########################################################
+
+# To do -- need to generate root for vault30 since it became a Performance Secondary before we can do this.
+
+# log INFO "Enable (primary) DR replication on vault30."
+# vault31 write -f sys/replication/dr/primary/enable
+
+# log INFO "Generate secondary DR Replication token on DR Primary (vault30)."
+# vault31 write -format=json sys/replication/dr/primary/secondary-token id="dr-secondary" | tee vault30-dr-secondary-token.json
+
+# sleep 10
+# log INFO "Enable (secondary) DR replication on vault40."
+# vault41 write sys/replication/dr/secondary/enable token=$(cat vault30-dr-secondary-token.json | jq -r .wrap_info.token) ca_file=/run/secrets/wildcard_ca_cert
 
 ###########################################################
 
