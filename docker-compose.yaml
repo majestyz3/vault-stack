@@ -77,6 +77,7 @@ services:
     extra_hosts:
       - "vault10.mac.example.com:172.20.0.10"
       - "vault20.mac.example.com:172.20.0.10"
+      - "vault30.mac.example.com:172.20.0.10"
 
   # whoami: # for testing traefik routing
   #   container_name: whoami
@@ -135,6 +136,8 @@ services:
     extra_hosts:
       - "vault10.mac.example.com:172.20.0.10"
       - "vault20.mac.example.com:172.20.0.10"
+      - "vault30.mac.example.com:172.20.0.10"
+      - "vault40.mac.example.com:172.20.0.10"
     depends_on:
       - cert_factory
 
@@ -180,6 +183,8 @@ services:
     extra_hosts:
       - "vault10.mac.example.com:172.20.0.10"
       - "vault20.mac.example.com:172.20.0.10"
+      - "vault30.mac.example.com:172.20.0.10"
+      - "vault40.mac.example.com:172.20.0.10"
     depends_on:
       - cert_factory
 
@@ -225,6 +230,8 @@ services:
     extra_hosts:
       - "vault10.mac.example.com:172.20.0.10"
       - "vault20.mac.example.com:172.20.0.10"
+      - "vault30.mac.example.com:172.20.0.10"
+      - "vault40.mac.example.com:172.20.0.10"
     depends_on:
       - cert_factory
 
@@ -270,6 +277,8 @@ services:
     extra_hosts:
       - "vault10.mac.example.com:172.20.0.10"
       - "vault20.mac.example.com:172.20.0.10"
+      - "vault30.mac.example.com:172.20.0.10"
+      - "vault40.mac.example.com:172.20.0.10"
     depends_on:
       - cert_factory
 
@@ -315,6 +324,8 @@ services:
     extra_hosts:
       - "vault10.mac.example.com:172.20.0.10"
       - "vault20.mac.example.com:172.20.0.10"
+      - "vault30.mac.example.com:172.20.0.10"
+      - "vault40.mac.example.com:172.20.0.10"
     depends_on:
       - cert_factory
 
@@ -360,6 +371,290 @@ services:
     extra_hosts:
       - "vault10.mac.example.com:172.20.0.10"
       - "vault20.mac.example.com:172.20.0.10"
+      - "vault30.mac.example.com:172.20.0.10"
+      - "vault40.mac.example.com:172.20.0.10"
+    depends_on:
+      - cert_factory
+
+  vault31:
+    container_name: vault31
+    hostname: vault31.$DOMAIN
+    image: hashicorp/vault-enterprise:1.19.5-ent
+    restart: unless-stopped
+    ports:
+      - 8231:8200
+    volumes:
+      - $TOP/vault31/data:/vault/data
+      - $TOP/vault31/conf:/vault/conf
+      - $TOP/vault31/audit:/vault/audit
+      - $TOP/vault31/snapshots:/vault/snapshots
+      - $TOP/vault31/plugins:/vault/plugins
+    environment:
+      - VAULT_ADDR=https://vault31.$DOMAIN:8200
+      - VAULT_API_ADDR=https://vault30.$DOMAIN
+      - VAULT_CLUSTER_ADDR=https://vault31.$DOMAIN:8201
+      - VAULT_SKIP_VERIFY=true
+      - VAULT_DISABLE_MLOCK=true
+      - SKIP_SETCAP=true
+      - VAULT_UI=true
+      - VAULT_LICENSE_PATH=/run/secrets/vault_license
+    command: vault server -config=/vault/conf/vault.hcl
+    secrets:
+      - wildcard_privkey
+      - wildcard_cert
+      - wildcard_ca_cert
+      - wildcard_fullchain
+      - vault_license
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.services.vault31.loadbalancer.server.port=8200"
+      - "traefik.http.routers.vault31.rule=Host(`vault30.$DOMAIN`)"
+      - "traefik.http.services.vault31.loadbalancer.server.scheme=https"
+      - "traefik.http.routers.vault31.entrypoints=websecure"
+      - "traefik.http.routers.vault31.tls=true"
+    networks:
+      vault-net:
+        ipv4_address: 172.20.0.31
+    extra_hosts:
+      - "vault10.mac.example.com:172.20.0.10"
+      - "vault20.mac.example.com:172.20.0.10"
+      - "vault30.mac.example.com:172.20.0.10"
+      - "vault40.mac.example.com:172.20.0.10"
+    depends_on:
+      - cert_factory
+
+  vault32:
+    container_name: vault32
+    hostname: vault32.$DOMAIN
+    image: hashicorp/vault-enterprise:1.19.5-ent
+    restart: unless-stopped
+    ports:
+      - 8232:8200
+    volumes:
+      - $TOP/vault32/data:/vault/data
+      - $TOP/vault32/conf:/vault/conf
+      - $TOP/vault32/audit:/vault/audit
+      - $TOP/vault32/snapshots:/vault/snapshots
+      - $TOP/vault32/plugins:/vault/plugins
+    environment:
+      - VAULT_ADDR=https://vault32.$DOMAIN:8200
+      - VAULT_API_ADDR=https://vault30.$DOMAIN
+      - VAULT_CLUSTER_ADDR=https://vault32.$DOMAIN:8201
+      - VAULT_SKIP_VERIFY=true
+      - VAULT_DISABLE_MLOCK=true
+      - SKIP_SETCAP=true
+      - VAULT_UI=true
+      - VAULT_LICENSE_PATH=/run/secrets/vault_license
+    command: vault server -config=/vault/conf/vault.hcl
+    secrets:
+      - wildcard_privkey
+      - wildcard_cert
+      - wildcard_ca_cert
+      - wildcard_fullchain
+      - vault_license
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.services.vault32.loadbalancer.server.port=8200"
+      - "traefik.http.routers.vault32.rule=Host(`vault30.$DOMAIN`)"
+      - "traefik.http.services.vault32.loadbalancer.server.scheme=https"
+      - "traefik.http.routers.vault32.entrypoints=websecure"
+      - "traefik.http.routers.vault32.tls=true"
+    networks:
+      vault-net:
+        ipv4_address: 172.20.0.32
+    extra_hosts:
+      - "vault10.mac.example.com:172.20.0.10"
+      - "vault20.mac.example.com:172.20.0.10"
+      - "vault30.mac.example.com:172.20.0.10"
+      - "vault40.mac.example.com:172.20.0.10"
+    depends_on:
+      - cert_factory
+
+  vault33:
+    container_name: vault33
+    hostname: vault33.$DOMAIN
+    image: hashicorp/vault-enterprise:1.19.5-ent
+    restart: unless-stopped
+    ports:
+      - 8233:8200
+    volumes:
+      - $TOP/vault33/data:/vault/data
+      - $TOP/vault33/conf:/vault/conf
+      - $TOP/vault33/audit:/vault/audit
+      - $TOP/vault33/snapshots:/vault/snapshots
+      - $TOP/vault33/plugins:/vault/plugins
+    environment:
+      - VAULT_ADDR=https://vault33.$DOMAIN:8200
+      - VAULT_API_ADDR=https://vault30.$DOMAIN
+      - VAULT_CLUSTER_ADDR=https://vault33.$DOMAIN:8201
+      - VAULT_SKIP_VERIFY=true
+      - VAULT_DISABLE_MLOCK=true
+      - SKIP_SETCAP=true
+      - VAULT_UI=true
+      - VAULT_LICENSE_PATH=/run/secrets/vault_license
+    command: vault server -config=/vault/conf/vault.hcl
+    secrets:
+      - wildcard_privkey
+      - wildcard_cert
+      - wildcard_ca_cert
+      - wildcard_fullchain
+      - vault_license
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.services.vault23.loadbalancer.server.port=8200"
+      - "traefik.http.routers.vault23.rule=Host(`vault20.$DOMAIN`)"
+      - "traefik.http.services.vault23.loadbalancer.server.scheme=https"
+      - "traefik.http.routers.vault23.entrypoints=websecure"
+      - "traefik.http.routers.vault23.tls=true"
+    networks:
+      vault-net:
+        ipv4_address: 172.20.0.33
+    extra_hosts:
+      - "vault10.mac.example.com:172.20.0.10"
+      - "vault20.mac.example.com:172.20.0.10"
+      - "vault30.mac.example.com:172.20.0.10"
+      - "vault40.mac.example.com:172.20.0.10"
+    depends_on:
+      - cert_factory
+
+  vault41:
+    container_name: vault41
+    hostname: vault41.$DOMAIN
+    image: hashicorp/vault-enterprise:1.19.5-ent
+    restart: unless-stopped
+    ports:
+      - 8241:8200
+    volumes:
+      - $TOP/vault41/data:/vault/data
+      - $TOP/vault41/conf:/vault/conf
+      - $TOP/vault41/audit:/vault/audit
+      - $TOP/vault41/snapshots:/vault/snapshots
+      - $TOP/vault41/plugins:/vault/plugins
+    environment:
+      - VAULT_ADDR=https://vault41.$DOMAIN:8200
+      - VAULT_API_ADDR=https://vault40.$DOMAIN
+      - VAULT_CLUSTER_ADDR=https://vault41.$DOMAIN:8201
+      - VAULT_SKIP_VERIFY=true
+      - VAULT_DISABLE_MLOCK=true
+      - SKIP_SETCAP=true
+      - VAULT_UI=true
+      - VAULT_LICENSE_PATH=/run/secrets/vault_license
+    command: vault server -config=/vault/conf/vault.hcl
+    secrets:
+      - wildcard_privkey
+      - wildcard_cert
+      - wildcard_ca_cert
+      - wildcard_fullchain
+      - vault_license
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.services.vault41.loadbalancer.server.port=8200"
+      - "traefik.http.routers.vault41.rule=Host(`vault40.$DOMAIN`)"
+      - "traefik.http.services.vault41.loadbalancer.server.scheme=https"
+      - "traefik.http.routers.vault41.entrypoints=websecure"
+      - "traefik.http.routers.vault41.tls=true"
+    networks:
+      vault-net:
+        ipv4_address: 172.20.0.41
+    extra_hosts:
+      - "vault10.mac.example.com:172.20.0.10"
+      - "vault20.mac.example.com:172.20.0.10"
+      - "vault30.mac.example.com:172.20.0.10"
+      - "vault40.mac.example.com:172.20.0.10"
+    depends_on:
+      - cert_factory
+
+  vault42:
+    container_name: vault42
+    hostname: vault42.$DOMAIN
+    image: hashicorp/vault-enterprise:1.19.5-ent
+    restart: unless-stopped
+    ports:
+      - 8242:8200
+    volumes:
+      - $TOP/vault42/data:/vault/data
+      - $TOP/vault42/conf:/vault/conf
+      - $TOP/vault42/audit:/vault/audit
+      - $TOP/vault42/snapshots:/vault/snapshots
+      - $TOP/vault42/plugins:/vault/plugins
+    environment:
+      - VAULT_ADDR=https://vault42.$DOMAIN:8200
+      - VAULT_API_ADDR=https://vault40.$DOMAIN
+      - VAULT_CLUSTER_ADDR=https://vault42.$DOMAIN:8201
+      - VAULT_SKIP_VERIFY=true
+      - VAULT_DISABLE_MLOCK=true
+      - SKIP_SETCAP=true
+      - VAULT_UI=true
+      - VAULT_LICENSE_PATH=/run/secrets/vault_license
+    command: vault server -config=/vault/conf/vault.hcl
+    secrets:
+      - wildcard_privkey
+      - wildcard_cert
+      - wildcard_ca_cert
+      - wildcard_fullchain
+      - vault_license
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.services.vault42.loadbalancer.server.port=8200"
+      - "traefik.http.routers.vault42.rule=Host(`vault40.$DOMAIN`)"
+      - "traefik.http.services.vault42.loadbalancer.server.scheme=https"
+      - "traefik.http.routers.vault42.entrypoints=websecure"
+      - "traefik.http.routers.vault42.tls=true"
+    networks:
+      vault-net:
+        ipv4_address: 172.20.0.42
+    extra_hosts:
+      - "vault10.mac.example.com:172.20.0.10"
+      - "vault20.mac.example.com:172.20.0.10"
+      - "vault30.mac.example.com:172.20.0.10"
+      - "vault40.mac.example.com:172.20.0.10"
+    depends_on:
+      - cert_factory
+
+  vault43:
+    container_name: vault43
+    hostname: vault43.$DOMAIN
+    image: hashicorp/vault-enterprise:1.19.5-ent
+    restart: unless-stopped
+    ports:
+      - 8243:8200
+    volumes:
+      - $TOP/vault43/data:/vault/data
+      - $TOP/vault43/conf:/vault/conf
+      - $TOP/vault43/audit:/vault/audit
+      - $TOP/vault43/snapshots:/vault/snapshots
+      - $TOP/vault43/plugins:/vault/plugins
+    environment:
+      - VAULT_ADDR=https://vault43.$DOMAIN:8200
+      - VAULT_API_ADDR=https://vault40.$DOMAIN
+      - VAULT_CLUSTER_ADDR=https://vault43.$DOMAIN:8201
+      - VAULT_SKIP_VERIFY=true
+      - VAULT_DISABLE_MLOCK=true
+      - SKIP_SETCAP=true
+      - VAULT_UI=true
+      - VAULT_LICENSE_PATH=/run/secrets/vault_license
+    command: vault server -config=/vault/conf/vault.hcl
+    secrets:
+      - wildcard_privkey
+      - wildcard_cert
+      - wildcard_ca_cert
+      - wildcard_fullchain
+      - vault_license
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.services.vault43.loadbalancer.server.port=8200"
+      - "traefik.http.routers.vault43.rule=Host(`vault40.$DOMAIN`)"
+      - "traefik.http.services.vault43.loadbalancer.server.scheme=https"
+      - "traefik.http.routers.vault43.entrypoints=websecure"
+      - "traefik.http.routers.vault43.tls=true"
+    networks:
+      vault-net:
+        ipv4_address: 172.20.0.43
+    extra_hosts:
+      - "vault10.mac.example.com:172.20.0.10"
+      - "vault20.mac.example.com:172.20.0.10"
+      - "vault30.mac.example.com:172.20.0.10"
+      - "vault40.mac.example.com:172.20.0.10"
     depends_on:
       - cert_factory
 
