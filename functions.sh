@@ -97,21 +97,21 @@ vault23 () {
 
 vault31 () {
   VAULT_SKIP_VERIFY=1 \
-  VAULT_TOKEN=$(cat vault30-root-post-performance-replication.json| jq -r .token) \
+  VAULT_TOKEN=$(cat vault30-init.json| jq -r .root_token) \
   VAULT_ADDR=https://vault31.mac.example.com:8231 \
   vault $@
 }
 
 vault32 () {
   VAULT_SKIP_VERIFY=1 \
-  VAULT_TOKEN=$(cat vault30-root-post-performance-replication.json| jq -r .token) \
+  VAULT_TOKEN=$(cat vault30-init.json| jq -r .root_token) \
   VAULT_ADDR=https://vault32.mac.example.com:8232 \
   vault $@
 }
 
 vault33 () {
   VAULT_SKIP_VERIFY=1 \
-  VAULT_TOKEN=$(cat vault30-root-post-performance-replication.json| jq -r .token) \
+  VAULT_TOKEN=$(cat vault30-init.json| jq -r .root_token) \
   VAULT_ADDR=https://vault33.mac.example.com:8233 \
   vault $@
 }
@@ -120,21 +120,21 @@ vault33 () {
 
 vault41 () {
   VAULT_SKIP_VERIFY=1 \
-  VAULT_TOKEN=$(cat vault40-root-post-performance-replication.json| jq -r .token) \
+  VAULT_TOKEN=$(cat vault40-init.json| jq -r .root_token) \
   VAULT_ADDR=https://vault41.mac.example.com:8241 \
   vault $@
 }
 
 vault42 () {
   VAULT_SKIP_VERIFY=1 \
-  VAULT_TOKEN=$(cat vault40-root-post-performance-replication.json| jq -r .token) \
+  VAULT_TOKEN=$(cat vault40-init.json| jq -r .root_token) \
   VAULT_ADDR=https://vault42.mac.example.com:8242 \
   vault $@
 }
 
 vault43 () {
   VAULT_SKIP_VERIFY=1 \
-  VAULT_TOKEN=$(cat vault40-root-post-performance-replication.json| jq -r .token) \
+  VAULT_TOKEN=$(cat vault40-init.json| jq -r .root_token) \
   VAULT_ADDR=https://vault43.mac.example.com:8243 \
   vault $@
 }
