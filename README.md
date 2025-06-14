@@ -7,8 +7,11 @@ This repo stands up four HashiCorp Vault Enterprise clusters in Docker. Each cls
 4. [https://vault40.mac.example.com](https://vault40.mac.example.com)
 
 `vault10` is configured as the Performnce Primary and DR Primary.
+
 `vault20` is `vault10`'s DR Secondary.
+
 `vault30` is configured as a Performance Secondary and DR Primary.
+
 `vault40` is `vault30`'s DR Secondary. **Note that this has not been implemented yet.**
 
 ![Demo Environment](images/vault-stack.png)
