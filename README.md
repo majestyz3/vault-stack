@@ -1,6 +1,15 @@
 # vault-stack
 
-This repo stands up two HashiCorp Vault Enterprise clusters in Docker and configures DR Replication, setting one as a primary and the other as a secondary.
+This repo stands up four HashiCorp Vault Enterprise clusters in Docker. Each clsuter has 3 nodes, and uses raft integrated storage. The clusters are as follows:
+1. [https://vault10.mac.example.com](https://vault10.mac.example.com)
+2. [https://vault20.mac.example.com](https://vault20.mac.example.com)
+3. [https://vault30.mac.example.com](https://vault30.mac.example.com)
+4. [https://vault40.mac.example.com](https://vault40.mac.example.com)
+
+`vault10` is configured as the Performnce Primary and DR Primary.
+`vault20` is `vault10`'s DR Secondary.
+`vault30` is configured as a Performance Secondary and DR Primary.
+`vault40` is `vault30`'s DR Secondary. **Note that this has not been implemented yet.**
 
 ## Prerequisites
 
